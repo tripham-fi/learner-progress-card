@@ -14,7 +14,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.json({ success: true, message: "Hello World" });
+  res.json({ success: true, message: "Hello World 1"  });
 });
 
 app.listen(PORT, () => {
