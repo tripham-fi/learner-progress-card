@@ -1,10 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
+const env = require("./config/env");
 
 const app = express();
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:5173";
-const PORT = process.env.PORT || 3000;
+const CLIENT_URL = env.CLIENT_URL;
+const PORT = env.PORT;
 const corsOptions = {
   origin: [CLIENT_URL],
 };
