@@ -3,7 +3,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const env = require("./config/env");
 const routes = require("./routes/routes");
-const errorMiddleware = require("./middleware/error.middleware")
+const errorMiddleware = require("./middleware/error.middleware");
 
 const app = express();
 const CLIENT_URL = env.CLIENT_URL;
@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(routes);
 
 app.get("/", (req, res) => {
-  res.json({ success: true, message: "Hello World" });
+  res.json({ status: "API is running on /api" });
 });
 
 app.use(errorMiddleware);
