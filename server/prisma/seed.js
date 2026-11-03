@@ -28,6 +28,19 @@ const toddDates = [
   ...on("2026-10-29", 2),
 ];
 
+const davisDates = [
+  ...on("2026-10-06", 2),
+  ...on("2026-10-07", 2),
+  ...on("2026-10-08"),
+  ...on("2026-10-13", 2),
+  ...on("2026-10-14", 2),
+  ...on("2026-10-15"),
+  ...on("2026-10-27", 2),
+  ...on("2026-10-28", 2),
+];
+
+const mayoDates = [...on("2026-10-13"), ...on("2026-10-14", 2)];
+
 async function main() {
   console.log("Seeding database...");
   // Reset
@@ -42,34 +55,52 @@ async function main() {
     });
   }
   const jsProgram = programs["JavaScript Essentials"];
+  const webProgram = programs["Web Development Fundamentals"];
 
-  const [lisa, karen, todd] = await Promise.all(
+  const [lisa, karen, todd, davis, mayo] = await Promise.all(
     [
       {
         name: "Lisa",
         email: "lisa@test.com",
         username: "lisaTest",
         enrolled_at: "2026-09-14",
+        program: jsProgram,
       },
       {
         name: "Karen",
         email: "karen@test.com",
         username: "karenTest",
         enrolled_at: "2026-10-26",
+        program: jsProgram,
       },
       {
         name: "Todd",
         email: "todd@test.com",
         username: "toddTest",
         enrolled_at: "2026-10-19",
+        program: jsProgram,
       },
-    ].map(({ enrolled_at, ...e }) =>
+      {
+        name: "Davis",
+        email: "davis@test.com",
+        username: "davisTest",
+        enrolled_at: "2026-10-05",
+        program: webProgram,
+      },
+      {
+        name: "Mayo",
+        email: "mayo@test.com",
+        username: "mayoTest",
+        enrolled_at: "2026-10-12",
+        program: webProgram,
+      },
+    ].map(({ enrolled_at, program, ...e }) =>
       prisma.employee.create({
         data: {
           ...e,
           enrollments: {
             create: {
-              program_id: jsProgram.id,
+              program_id: program.id,
               enrolled_at: new Date(`${enrolled_at}T09:00:00Z`),
             },
           },
@@ -79,25 +110,32 @@ async function main() {
   );
 
   // Seeding lesson progress
-  const lessons = await prisma.lesson.findMany({
+  const jsLessons = await prisma.lesson.findMany({
     where: { module: { program_id: jsProgram.id } },
     orderBy: { position: "asc" },
   });
+  const webLessons = await prisma.lesson.findMany({
+    where: { module: { program_id: webProgram.id } },
+    orderBy: [{ module: { position: "asc" } }, { position: "asc" }],
+  });
 
-  const completionsFor = (employee, dates) => {
-    return dates.map((completed_at, i) => ({
+  const completionsFor = (employee, dates, lessonList) =>
+    dates.map((completed_at, i) => ({
       employee_id: employee.id,
-      lesson_id: lessons[i].id,
+      lesson_id: lessonList[i].id,
       completed_at,
     }));
-  };
 
   await prisma.lessonCompletion.createMany({
     data: [
-      ...completionsFor(lisa, lisaDates), // completed a module
-      ...completionsFor(todd, toddDates), // 10 of 24
+      ...completionsFor(lisa, lisaDates, jsLessons), // finished
+      ...completionsFor(todd, toddDates, jsLessons), // 10 of 24
+      ...completionsFor(davis, davisDates, webLessons), // 14 of 20, 1 of 2 modules
+      ...completionsFor(mayo, mayoDates, webLessons), // 3 of 20
     ],
   });
+
+  console.log("Seeded 2 programs, 5 learners, 51 completions");
 }
 
 main()
