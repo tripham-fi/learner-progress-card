@@ -65,6 +65,7 @@ async function main() {
         username: "lisaTest",
         enrolled_at: "2026-09-14",
         program: jsProgram,
+        image: "https://randomuser.me/api/portraits/women/32.jpg",
       },
       {
         name: "Karen",
@@ -72,6 +73,7 @@ async function main() {
         username: "karenTest",
         enrolled_at: "2026-10-26",
         program: jsProgram,
+        image: "https://randomuser.me/api/portraits/women/33.jpg",
       },
       {
         name: "Todd",
@@ -79,6 +81,7 @@ async function main() {
         username: "toddTest",
         enrolled_at: "2026-10-19",
         program: jsProgram,
+        image: "https://randomuser.me/api/portraits/men/32.jpg",
       },
       {
         name: "Davis",
@@ -86,6 +89,7 @@ async function main() {
         username: "davisTest",
         enrolled_at: "2026-10-05",
         program: webProgram,
+        image: "https://randomuser.me/api/portraits/men/36.jpg",
       },
       {
         name: "Mayo",
@@ -93,6 +97,7 @@ async function main() {
         username: "mayoTest",
         enrolled_at: "2026-10-12",
         program: webProgram,
+        image: "https://randomuser.me/api/portraits/men/34.jpg",
       },
     ].map(({ enrolled_at, program, ...e }) =>
       prisma.employee.create({
