@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@theme {
+  --color-bg: #ffffff;
+  --color-surface: #f6f7f9;
+  --color-text: #1a1d23;
+  --color-muted: #5b6270;
+  --color-accent: #2457d6;
+  --color-track: #e3e6eb;
+  --color-success: #1e7f4f;
+
+  --radius-card: 12px;
+}
+
+/* Dark values override the same variables, so every utility follows. */
+:root[data-theme="dark"] {
+  --color-bg: #121418;
+  --color-surface: #1b1e24;
+  --color-text: #eef0f3;
+  --color-muted: #a3aab6;
+  --color-accent: #7aa2ff;
+  --color-track: #2c313a;
+  --color-success: #4cc38a;
+}
+
+:root {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}

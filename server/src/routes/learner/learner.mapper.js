@@ -14,10 +14,10 @@ const learnerMapper = (e, stats) => {
     percent: total === 0 ? 0 : Math.round((done / total) * 100),
     status:
       total > 0 && done === total
-        ? "Completed"
+        ? "completed"
         : done === 0
-          ? "Not Started"
-          : "In Progress",
+          ? "not_started"
+          : "in_progress",
     lastActivity: last ? last.toISOString().slice(0, 10) : null,
   };
 };
