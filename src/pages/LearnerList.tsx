@@ -22,8 +22,9 @@ export default function LearnerList() {
       });
   }, []);
 
-  if (loading)
+  if (loading) {
     return <p className="text-center mt-20 text-muted">Loading...</p>;
+  }
 
   if (error) {
     return (
