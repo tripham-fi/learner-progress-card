@@ -40,7 +40,7 @@ async function getLearners() {
 
 async function getLearnerProgress(username, programId) {
   if (!programId || programId.length === 0) {
-    throw new HttpException(401, "Invalid query");
+    throw new HttpException(400, "Programid query param is required");
   }
   const enrollment = await prisma.enrollment.findFirst({
     where: { employee: { username }, program_id: programId },

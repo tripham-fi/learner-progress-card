@@ -11,7 +11,7 @@ export async function getLearnerProgress(
   programId: string | null,
 ) {
   if (!username || !programId) {
-    throw new ApiError(404, "Invalidate Query");
+    throw new ApiError(400, "Programid and username query param is required");
   }
   const data = await apiFetch<Result<LearnerProgress>>(
     `/learners/${encodeURIComponent(username)}?programId=${encodeURIComponent(programId)}`,
