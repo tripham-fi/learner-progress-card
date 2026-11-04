@@ -1,26 +1,13 @@
-import { useEffect, useState } from "react";
-import type { Learner } from "../constants/types";
 import LearnerItem from "../components/LearnerItem";
-import { getLearners } from "../api/learner";
-
+import { useLoaderData } from "react-router-dom";
+import { type Result, type Learner } from "../constants/types";
 export default function LearnerList() {
-  const [data, setData] = useState<Learner[]>([]);
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await getLearners();
-        setData(data.data);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-
-    loadData();
-  }, []);
+  const result = useLoaderData<Result<Learner[]>>(); 
+  const learners = result.data;
   return (
     <div className="p-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {data.length > 0 &&
-        data.map((learner) => (
+      {learners.length > 0 &&
+        learners.map((learner) => (
           <LearnerItem learner={learner} key={learner.name} />
         ))}
     </div>

@@ -13,3 +13,8 @@ export type Learner = {
   lastActivity: string | null;
 };
 export type Result<T> = { data: T; status: number };
+
+export type ErrorResult = {
+  status: number;
+  message: string;
+};

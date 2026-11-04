@@ -1,7 +1,19 @@
+import type { ErrorResult } from "../constants/types";
+
 const BASE_URL = "/api";
 
 function apiUrl(path: string): string {
   return `${BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export class ApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+    this.name = "ApiError";
+  }
 }
 
 export async function apiFetch<T>(
@@ -20,18 +32,20 @@ export async function apiFetch<T>(
       },
     });
   } catch (e) {
-    throw new Error("", { cause: e });
+    throw new ApiError(500, e instanceof Error ? e.message : "Network error");
   }
 
   if (!res.ok) {
+    let status = res.status;
     let message = `Request failed with status ${res.status}`;
     try {
-      const body = await res.json();
-      if (body?.message) message = body.message;
+      const errorBody = (await res.json()) as ErrorResult;
+      if (errorBody?.status) status = errorBody.status;
+      if (errorBody?.message) message = errorBody.message;
     } catch {
       // no JSON body, fall back to default message
     }
-    throw new Error(message);
+    throw new ApiError(status, message);
   }
 
   if (res.status === 204) return undefined as T;
