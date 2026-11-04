@@ -20,6 +20,7 @@ const lisaDates = [
   ...on("2026-10-30"),
   ...on("2026-10-31", 2),
 ];
+const lisaWebDates = [...on("2026-11-02", 2), ...on("2026-11-03", 3)];
 
 const toddDates = [
   ...on("2026-10-20", 3),
@@ -37,6 +38,11 @@ const davisDates = [
   ...on("2026-10-15"),
   ...on("2026-10-27", 2),
   ...on("2026-10-28", 2),
+];
+const davisJsDates = [
+  ...on("2026-10-30", 2),
+  ...on("2026-11-02", 3),
+  ...on("2026-11-03", 2),
 ];
 
 const mayoDates = [...on("2026-10-13"), ...on("2026-10-14", 2)];
@@ -63,51 +69,52 @@ async function main() {
         name: "Lisa",
         email: "lisa@test.com",
         username: "lisaTest",
-        enrolled_at: "2026-09-14",
-        program: jsProgram,
         image: "https://randomuser.me/api/portraits/women/32.jpg",
+        enrollments: [
+          { program: jsProgram, enrolled_at: "2026-09-14" },
+          { program: webProgram, enrolled_at: "2026-11-01" },
+        ],
       },
       {
         name: "Karen",
         email: "karen@test.com",
         username: "karenTest",
-        enrolled_at: "2026-10-26",
-        program: jsProgram,
         image: "https://randomuser.me/api/portraits/women/33.jpg",
+        enrollments: [{ program: jsProgram, enrolled_at: "2026-10-26" }],
       },
       {
         name: "Todd",
         email: "todd@test.com",
         username: "toddTest",
-        enrolled_at: "2026-10-19",
-        program: jsProgram,
         image: "https://randomuser.me/api/portraits/men/32.jpg",
+        enrollments: [{ program: jsProgram, enrolled_at: "2026-10-19" }],
       },
       {
         name: "Davis",
         email: "davis@test.com",
         username: "davisTest",
-        enrolled_at: "2026-10-05",
-        program: webProgram,
         image: "https://randomuser.me/api/portraits/men/36.jpg",
+        enrollments: [
+          { program: webProgram, enrolled_at: "2026-10-05" },
+          { program: jsProgram, enrolled_at: "2026-10-29" },
+        ],
       },
       {
         name: "Mayo",
         email: "mayo@test.com",
         username: "mayoTest",
-        enrolled_at: "2026-10-12",
-        program: webProgram,
         image: "https://randomuser.me/api/portraits/men/34.jpg",
+        enrollments: [{ program: webProgram, enrolled_at: "2026-10-12" }],
       },
-    ].map(({ enrolled_at, program, ...e }) =>
+    ].map(({ enrollments, ...e }) =>
       prisma.employee.create({
         data: {
           ...e,
           enrollments: {
-            create: {
+            create: enrollments.map(({ program, enrolled_at }) => ({
               program_id: program.id,
               enrolled_at: new Date(`${enrolled_at}T09:00:00Z`),
-            },
+            })),
           },
         },
       }),
@@ -133,14 +140,16 @@ async function main() {
 
   await prisma.lessonCompletion.createMany({
     data: [
-      ...completionsFor(lisa, lisaDates, jsLessons), // finished
-      ...completionsFor(todd, toddDates, jsLessons), // 10 of 24
-      ...completionsFor(davis, davisDates, webLessons), // 14 of 20, 1 of 2 modules
-      ...completionsFor(mayo, mayoDates, webLessons), // 3 of 20
+      ...completionsFor(lisa, lisaDates, jsLessons), // JS: 24 of 24, finished
+      ...completionsFor(lisa, lisaWebDates, webLessons), // Web: 5 of 20
+      ...completionsFor(todd, toddDates, jsLessons), // JS: 10 of 24
+      ...completionsFor(davis, davisDates, webLessons), // Web: 14 of 20, 1 of 2 modules
+      ...completionsFor(davis, davisJsDates, jsLessons), // JS: 7 of 24
+      ...completionsFor(mayo, mayoDates, webLessons), // Web: 3 of 20
     ],
   });
 
-  console.log("Seeded 2 programs, 5 learners, 51 completions");
+  console.log("Seeded 2 programs, 5 learners, 7 enrolments, 63 completions");
 }
 
 main()

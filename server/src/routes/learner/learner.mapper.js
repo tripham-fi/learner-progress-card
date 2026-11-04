@@ -8,6 +8,7 @@ const learnerMapper = (e, stats) => {
     username: e.employee.username,
     image: e.employee.image,
     program: e.program.title,
+    programId: e.program_id,
     enrolledAt: e.enrolled_at.toISOString().slice(0, 10),
     completedLessons: done,
     totalLessons: total,
