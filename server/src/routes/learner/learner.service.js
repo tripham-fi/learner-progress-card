@@ -1,5 +1,6 @@
 const prisma = require("./../../config/prisma");
 const { learnerMapper } = require("./learner.mapper");
+const HttpException = require('./../../exception/http-exception.model')
 
 async function getLearners() {
   const enrollments = await prisma.enrollment.findMany({
