@@ -8,12 +8,12 @@ interface CardItemProp {
   learner: Learner;
 }
 
-export default function CardItem({
-  learner: { program, percent, name, image, lastActivity, status },
+export default function LearnerItem({
+  learner: { program, percent, name, username, image, lastActivity, status },
 }: CardItemProp) {
   return (
     <Link
-      to={`/learner/${name}`}
+      to={`/learner/${username}`}
       className="rounded-xl bg-surface p-4 border cursor-pointer"
     >
       <div className="flex items-start justify-between gap-3">

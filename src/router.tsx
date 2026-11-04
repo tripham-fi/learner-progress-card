@@ -1,19 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import PublicRoute from "./components/PublicRoute";
-import CardList from "./pages/LearnerList";
 import LearnerDetail from "./pages/LearnerDetail";
-import ErrorPage from "./pages/NotFound";
+import NotFound from "./pages/error/NotFound";
+import ServerError from "./pages/error/ServerError";
+import LearnerList from "./pages/LearnerList";
 
 const publicRoutes = [
-  { path: "/", element: <CardList /> },
+  { path: "/", element: <LearnerList /> },
   { path: "/learner/:username", element: <LearnerDetail /> },
-  { element: <ErrorPage /> },
+  { element: <NotFound /> },
 ];
 
 export const router = createBrowserRouter([
   {
     element: <PublicRoute />,
     children: publicRoutes,
-    errorElement: <ErrorPage />,
+    errorElement: <ServerError />
   },
 ]);
